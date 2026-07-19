@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTANEW — Règlement Illégal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0b;
+    --surface: rgba(255,255,255,0.035);
+    --surface-solid: #131315;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,214,10,0.4);
+    --yellow: #FFD60A;
+    --yellow-soft: rgba(255,214,10,0.12);
+    --amber: #FF9F0A;
+    --text: #F2F2F3;
+    --muted: #8b8b92;
+    --muted-2: #5a5a60;
+  }
+
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient glow background */
+  body::before{
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1200px;
+    height: 700px;
+    background: radial-gradient(ellipse at center, rgba(255,214,10,0.08) 0%, rgba(255,159,10,0.03) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after{
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .layout{
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    padding: 40px 20px 40px 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+  }
+
+  .brand{
+    margin-bottom: 36px;
+  }
+  .brand-mark{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .brand-logo{
+    width: 30px;
+    height: auto;
+    filter: drop-shadow(0 0 8px rgba(255,214,10,0.35));
+  }
+  .brand h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, var(--yellow) 120%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brand p{
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+  }
+
+  .badge-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: var(--yellow);
+    background: var(--yellow-soft);
+    border: 1px solid rgba(255,214,10,0.25);
+    padding: 5px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+    font-weight: 500;
+  }
+
+  nav.nav{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    flex: 1;
+  }
+  .nav-btn{
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+    position: relative;
+  }
+  .nav-btn .idx{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    color: var(--muted-2);
+    width: 18px;
+    transition: color 0.2s ease;
+  }
+  .nav-btn:hover{
+    color: var(--text);
+    background: rgba(255,255,255,0.03);
+  }
+  .nav-btn.active{
+    color: var(--yellow);
+    background: var(--yellow-soft);
+  }
+  .nav-btn.active .idx{ color: var(--yellow); }
+
+  .sidebar-foot{
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.68rem;
+    color: var(--muted-2);
+    line-height: 1.6;
+  }
+
+  /* MAIN */
+  main{
+    padding: 48px 40px 100px;
+    min-width: 0;
+  }
+
+  .top-note{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(255,214,10,0.08), rgba(255,159,10,0.03));
+    border: 1px solid rgba(255,214,10,0.18);
+    color: #e8d590;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 36px;
+  }
+
+  .panel{ display: none; }
+  .panel.active{ display: block; animation: rise 0.35s ease; }
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(10px); }
+    to{ opacity: 1; transform: none; }
+  }
+
+  .panel-head{
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .panel-head .tag{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted-2);
+    letter-spacing: 0.08em;
+  }
+  .panel h2{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .panel .sub{
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 6px 0 32px;
+  }
+
+  .grid{
+    display: grid;
+    gap: 14px;
+  }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    backdrop-filter: blur(12px);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover{
+    border-color: var(--border-hover);
+  }
+  .card h3{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .card h3 .code{
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #0a0a0b;
+    background: var(--yellow);
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+  }
+  .card ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .card li{
+    font-size: 0.87rem;
+    line-height: 1.55;
+    color: #c7c7cc;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .card li::before{
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--muted-2);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .fill{
+    color: var(--yellow);
+    border-bottom: 1px dashed rgba(255,214,10,0.4);
+    padding-bottom: 1px;
+  }
+
+  /* Table */
+  .table-wrap{
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 480px;
+  }
+  th{
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    background: rgba(255,214,10,0.06);
+    padding: 12px 16px;
+  }
+  td{
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    color: #c7c7cc;
+  }
+  tr:hover td{ background: rgba(255,255,255,0.02); }
+
+  /* Mobile nav */
+  .mobile-topbar{ display: none; }
+
+  @media (max-width: 880px){
+    .layout{ grid-template-columns: 1fr; }
+    .sidebar{
+      position: sticky;
+      top: 0;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 16px;
+      z-index: 5;
+      background: rgba(10,10,11,0.85);
+      backdrop-filter: blur(16px);
+    }
+    .brand{ margin-bottom: 16px; }
+    nav.nav{
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 6px;
+      padding-bottom: 4px;
+    }
+    .nav-btn{ flex: 0 0 auto; white-space: nowrap; }
+    .sidebar-foot{ display: none; }
+    main{ padding: 28px 20px 80px; }
+    .panel h2{ font-size: 1.6rem; }
+  }
+
+  :focus-visible{
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .panel.active{ animation: none; }
+    html{ scroll-behavior: auto; }
+  }
+
+  /* --- Mode édition owner --- */
+  .edit-fab{
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 50;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .edit-btn{
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    transition: border-color 0.2s ease, transform 0.15s ease;
+  }
+  .edit-btn:hover{ border-color: var(--border-hover); transform: translateY(-1px); }
+  .edit-btn.on{
+    background: var(--yellow);
+    color: #0a0a0b;
+    border-color: var(--yellow);
+  }
+  .save-btn{ display: none; }
+  body.editing .save-btn{ display: inline-flex; }
+
+  body.editing [data-editable="true"]{
+    outline: 1px dashed rgba(255,214,10,0.5);
+    outline-offset: 3px;
+    border-radius: 6px;
+    cursor: text;
+  }
+  body.editing [data-editable="true"]:focus{
+    outline: 2px solid var(--yellow);
+    background: rgba(255,214,10,0.06);
+  }
+  .edit-hint{
+    position: fixed;
+    bottom: 74px;
+    right: 22px;
+    z-index: 50;
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.72rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 220px;
+    display: none;
+  }
+  body.editing .edit-hint{ display: block; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <img class="brand-logo" src="data:image/png;base64,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" alt="Logo GTANEW">
+        <h1>GTANEW</h1>
+      </div>
+      <p>Règlement des activités illégales</p>
+      <div style="margin-top:12px;">
+        <span class="badge-pill">● Usage interne</span>
+      </div>
+    </div>
+
+    <nav class="nav" role="tablist" aria-label="Catégories du règlement illégal">
+      <button class="nav-btn active" data-tab="braquages" role="tab" aria-selected="true"><span class="idx">01</span>Braquages</button>
+      <button class="nav-btn" data-tab="otages" role="tab" aria-selected="false"><span class="idx">02</span>Prises d'otages</button>
+      <button class="nav-btn" data-tab="gangs" role="tab" aria-selected="false"><span class="idx">03</span>Gangs &amp; territoires</button>
+      <button class="nav-btn" data-tab="stup" role="tab" aria-selected="false"><span class="idx">04</span>Stupéfiants</button>
+      <button class="nav-btn" data-tab="armes" role="tab" aria-selected="false"><span class="idx">05</span>Armes</button>
+      <button class="nav-btn" data-tab="vehicules" role="tab" aria-selected="false"><span class="idx">06</span>Véhicules</button>
+      <button class="nav-btn" data-tab="blanchiment" role="tab" aria-selected="false"><span class="idx">07</span>Blanchiment</button>
+      <button class="nav-btn" data-tab="sanctions" role="tab" aria-selected="false"><span class="idx">08</span>Sanctions</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      Version 1.0<br>
+      Dernière mise à jour : à compléter
+    </div>
+  </aside>
+
+  <main>
+    <div class="top-note">
+      ⚠️ Ce document est un modèle. Chaque élément en <span class="fill">jaune souligné</span> est à remplacer par les règles réelles de ton serveur (quotas, délais RP, montants, sanctions...).
+    </div>
+
+    <!-- 01 BRAQUAGES -->
+    <section class="panel active" id="braquages">
+      <div class="panel-head"><span class="tag">01 —</span><h2>Braquages</h2></div>
+      <p class="sub">Magasins, banques, bijouteries, fourgons</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">BRQ-1</span>Effectif requis</h3>
+          <ul>
+            <li>Petit commerce : <span class="fill">X à X joueurs</span> maximum</li>
+            <li>Banque principale : <span class="fill">X à X joueurs</span> maximum, effectif police minimum de <span class="fill">X</span></li>
+            <li>Bijouterie : <span class="fill">X à X joueurs</span> maximum</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">BRQ-2</span>Délais et cooldown</h3>
+          <ul>
+            <li>Temps de RP minimum avant l'ouverture du coffre : <span class="fill">X minutes</span></li>
+            <li>Cooldown avant de refaire le même braquage : <span class="fill">X minutes</span></li>
+            <li>Durée maximale de l'intervention avant abandon obligatoire : <span class="fill">X minutes</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">BRQ-3</span>Règles de conduite</h3>
+          <ul>
+            <li><span class="fill">Interdiction / autorisation</span> de braquer sans effectif policier connecté</li>
+            <li>Nombre de braquages simultanés autorisés sur la carte : <span class="fill">X</span></li>
+            <li>Zone de fuite et rayon d'action : <span class="fill">à définir</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 OTAGES -->
+    <section class="panel" id="otages">
+      <div class="panel-head"><span class="tag">02 —</span><h2>Prises d'otages</h2></div>
+      <p class="sub">Négociation, échange, durée de RP</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">OTG-1</span>Conditions d'ouverture</h3>
+          <ul>
+            <li>Nombre d'otages maximum autorisé : <span class="fill">X</span></li>
+            <li>Contexte RP obligatoire avant la prise d'otage : <span class="fill">à définir</span></li>
+            <li>Effectif policier minimum requis avant le début : <span class="fill">X</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">OTG-2</span>Durée et négociation</h3>
+          <ul>
+            <li>Durée maximale de la prise d'otage : <span class="fill">X minutes</span></li>
+            <li>Temps de réponse minimum avant assaut : <span class="fill">X minutes</span></li>
+            <li>Rôle du négociateur : <span class="fill">à définir</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">OTG-3</span>Interdits</h3>
+          <ul>
+            <li><span class="fill">Comportements interdits pendant la négociation (metagaming, powergaming...)</span></li>
+            <li>Sanction en cas de non-respect du temps RP : <span class="fill">à définir</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 GANGS -->
+    <section class="panel" id="gangs">
+      <div class="panel-head"><span class="tag">03 —</span><h2>Gangs &amp; territoires</h2></div>
+      <p class="sub">Création, guerre de territoire, alliances</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">GNG-1</span>Création d'un gang</h3>
+          <ul>
+            <li>Nombre de membres minimum/maximum : <span class="fill">X / X</span></li>
+            <li>Validation nécessaire auprès du staff : <span class="fill">oui / non</span></li>
+            <li>Charte ou background RP à fournir : <span class="fill">à définir</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">GNG-2</span>Guerre de territoire</h3>
+          <ul>
+            <li>Fréquence maximale des affrontements : <span class="fill">X par semaine</span></li>
+            <li>Zones neutres interdites aux affrontements : <span class="fill">à lister</span></li>
+            <li>Déclaration préalable au staff obligatoire : <span class="fill">oui / non</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">GNG-3</span>Alliances et trahisons</h3>
+          <ul>
+            <li><span class="fill">Règles concernant les alliances entre gangs</span></li>
+            <li><span class="fill">Règles concernant les infiltrations et trahisons RP</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 STUPEFIANTS -->
+    <section class="panel" id="stup">
+      <div class="panel-head"><span class="tag">04 —</span><h2>Stupéfiants</h2></div>
+      <p class="sub">Production, transport, vente</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">STP-1</span>Production</h3>
+          <ul>
+            <li>Lieux de production autorisés : <span class="fill">à lister</span></li>
+            <li>Quantité maximale produite par session : <span class="fill">X unités</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">STP-2</span>Transport et vente</h3>
+          <ul>
+            <li>Nombre de convoyeurs maximum : <span class="fill">X</span></li>
+            <li>Zones de vente interdites : <span class="fill">à lister</span></li>
+            <li>Interaction avec les forces de l'ordre : <span class="fill">à définir</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">STP-3</span>Sanctions spécifiques</h3>
+          <ul>
+            <li><span class="fill">Sanctions en cas de vente hors-RP ou de contournement des règles</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 ARMES -->
+    <section class="panel" id="armes">
+      <div class="panel-head"><span class="tag">05 —</span><h2>Armes &amp; armement</h2></div>
+      <p class="sub">Détention, trafic, usage en RP</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">ARM-1</span>Détention</h3>
+          <ul>
+            <li>Armes autorisées en possession illégale : <span class="fill">à lister</span></li>
+            <li>Justification RP requise pour le port d'arme lourde : <span class="fill">oui / non</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">ARM-2</span>Trafic d'armes</h3>
+          <ul>
+            <li>Quantité maximale échangeable par transaction : <span class="fill">X</span></li>
+            <li>Zones de deal autorisées : <span class="fill">à lister</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">ARM-3</span>Usage en confrontation</h3>
+          <ul>
+            <li><span class="fill">Règles de fair-play / no random deathmatch</span></li>
+            <li><span class="fill">Règles de rétention d'objet et de fuite</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 VEHICULES -->
+    <section class="panel" id="vehicules">
+      <div class="panel-head"><span class="tag">06 —</span><h2>Véhicules</h2></div>
+      <p class="sub">Vol, recel, plaques modifiées</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">VHC-1</span>Vol de véhicule</h3>
+          <ul>
+            <li>Véhicules pouvant être volés : <span class="fill">à définir</span></li>
+            <li>Temps de RP minimum pour forcer un véhicule : <span class="fill">X secondes/minutes</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">VHC-2</span>Recel et revente</h3>
+          <ul>
+            <li>Lieux de recel autorisés : <span class="fill">à lister</span></li>
+            <li>Modification de plaques / VIN : <span class="fill">autorisé / interdit</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 BLANCHIMENT -->
+    <section class="panel" id="blanchiment">
+      <div class="panel-head"><span class="tag">07 —</span><h2>Blanchiment d'argent</h2></div>
+      <p class="sub">Commerces façades, transactions</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span class="code">BLC-1</span>Commerces autorisés</h3>
+          <ul>
+            <li>Types de commerces pouvant servir de façade : <span class="fill">à lister</span></li>
+            <li>Plafond de blanchiment par jour RP : <span class="fill">X$</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="code">BLC-2</span>Contrôles</h3>
+          <ul>
+            <li><span class="fill">Conditions de saisie ou d'enquête par les autorités RP</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 SANCTIONS -->
+    <section class="panel" id="sanctions">
+      <div class="panel-head"><span class="tag">08 —</span><h2>Sanctions</h2></div>
+      <p class="sub">Barème en cas de non-respect du règlement illégal</p>
+
+      <div class="grid">
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:20px 22px 14px;">
+            <h3 style="margin-bottom:0;"><span class="code">SNC-1</span>Barème général</h3>
+          </div>
+          <div class="table-wrap" style="border:none; border-top:1px solid var(--border); border-radius:0;">
+            <table>
+              <thead>
+                <tr><th>Infraction</th><th>1ère fois</th><th>Récidive</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Non-respect des effectifs de braquage</td><td class="fill">à définir</td><td class="fill">à définir</td></tr>
+                <tr><td>Metagaming / Powergaming</td><td class="fill">à définir</td><td class="fill">à définir</td></tr>
+                <tr><td>Random Deathmatch (RDM)</td><td class="fill">à définir</td><td class="fill">à définir</td></tr>
+                <tr><td>Fail RP en négociation</td><td class="fill">à définir</td><td class="fill">à définir</td></tr>
+                <tr><td>Contournement de cooldown</td><td class="fill">à définir</td><td class="fill">à définir</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="code">SNC-2</span>Procédure de sanction</h3>
+          <ul>
+            <li><span class="fill">Qui applique la sanction (staff, modérateur...)</span></li>
+            <li><span class="fill">Procédure d'appel ou de contestation</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="edit-hint">Clique sur un texte en pointillé jaune pour le modifier, puis clique sur "Enregistrer" pour télécharger la version mise à jour.</div>
+
+<div class="edit-fab">
+  <button class="edit-btn save-btn" id="saveBtn">💾 Enregistrer</button>
+  <button class="edit-btn" id="editBtn">🔒 Mode édition</button>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.nav-btn');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  /* --- Mode édition owner --- */
+  // Change ce mot de passe avant de mettre le site en ligne.
+  const OWNER_PASSWORD = "gtanew2026";
+
+  const EDITABLE_SELECTORS = '.brand h1, .brand p, .badge-pill, .panel h2, .panel .sub, .card, td, .sidebar-foot, .top-note';
+  const editBtn = document.getElementById('editBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  let editing = false;
+
+  function setEditable(on){
+    document.querySelectorAll(EDITABLE_SELECTORS).forEach(el => {
+      el.setAttribute('contenteditable', on ? 'true' : 'false');
+    });
+    document.body.classList.toggle('editing', on);
+    editBtn.classList.toggle('on', on);
+    editBtn.textContent = on ? '✓ Terminer l\'édition' : '🔒 Mode édition';
+    editing = on;
+  }
+
+  editBtn.addEventListener('click', () => {
+    if (!editing) {
+      const pwd = prompt("Mot de passe owner :");
+      if (pwd === null) return;
+      if (pwd !== OWNER_PASSWORD) { alert("Mot de passe incorrect."); return; }
+      setEditable(true);
+    } else {
+      setEditable(false);
+    }
+  });
+
+  saveBtn.addEventListener('click', () => {
+    // On clone la page, on retire les attributs d'édition en cours, puis on télécharge le HTML final
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    const body = clone.querySelector('body');
+    if (body) body.classList.remove('editing');
+
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reglement-illegal-gtanew.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
